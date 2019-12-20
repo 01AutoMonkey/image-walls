@@ -55,7 +55,7 @@ function toDataUrl(url, callback) {
     };
     xhr.onerror = function(error) {
         this.onerror = null;
-        this.open('GET', "https://cors.io/?"+url);
+        this.open('GET', "https://cors-anywhere.herokuapp.com/"+url);
         this.send();
     }
     xhr.open('GET', url);
