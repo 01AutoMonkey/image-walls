@@ -1,0 +1,54 @@
+html, body {
+	height: 100%;
+}
+
+body {
+	background-color: #1a1a1a;
+}
+
+#tabs {
+	background-color: #222;
+}
+#tabs button {
+	float: left;
+	width: 50px;
+	height: 50px;
+	background-color: #222;
+	color: #fff;
+	border: 0px;
+	cursor: pointer;
+	border-right: 1px solid #1a1a1a;
+}
+#tabs .items {
+	float: left;
+	width: calc(100% - 50px);
+	height: 50px;
+	background-color: #222;
+}
+#tabs .items div {
+	min-width: 50px;
+	height: 50px;
+	text-align: center;
+	line-height: 50px;
+	color: #fff;
+	display: inline-block;
+	border-right: 1px solid #1a1a1a;
+}
+#tabs .items div.selected,
+#tabs .items div:hover {
+	background-color: aquamarine;
+	cursor: pointer;
+}
+
+#container {
+	padding: 10px;
+	display: inline-block;
+}
+#container img {
+	width: auto;
+	height: 200px;
+	margin: 10px;
+	float: left;
+	border: 1px solid #000;
+	border-style: solid !important;
+}

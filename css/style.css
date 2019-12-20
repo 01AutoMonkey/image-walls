@@ -1,0 +1,4 @@
+.markup-body, html, button, input, select, textarea,
+.pure-g [class *= "pure-u"] {
+  font-family: Cantarell,Symbola,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+}
