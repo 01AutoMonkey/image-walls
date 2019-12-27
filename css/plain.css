@@ -8,6 +8,8 @@ body {
 
 #tabs {
 	background-color: #222;
+	height: 50px;
+	border-bottom: #222;
 }
 #tabs button {
 	float: left;
@@ -24,6 +26,7 @@ body {
 	width: calc(100% - 50px);
 	height: 50px;
 	background-color: #222;
+	display: contents;
 }
 #tabs .items div {
 	min-width: 50px;
@@ -42,16 +45,45 @@ body {
 	cursor: pointer;
 	color: #222;
 }
+#tabs select {
+	float: right;
+	border: 0px;
+	background-color: #222;
+	height: 100%;
+	border-left: 1px solid #1a1a1a;
+	color: #fff;
+	padding: 15px;
+	outline: none;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+}
 
 #container {
-	padding: 10px;
+	padding: 5px;
 	display: inline-block;
 }
-#container img {
-	width: auto;
-	height: 200px;
-	margin: 10px;
+#container .img {
+	margin: 5px;
 	float: left;
 	border: 1px solid #000;
 	border-style: solid !important;
+
+	border-radius: 5px;
+}
+#container.mode_0 .img {
+}
+#container.mode_1 .img {
+	height: 300px !important;
+	width: 200px !important;
+}
+#container.mode_2 .img {
+	height: 200px !important;
+	width: 325px !important;
+}
+#container.mode_3 .img {
+	height: 200px !important;
+	width: 200px !important;
 }

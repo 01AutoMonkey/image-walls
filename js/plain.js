@@ -1,11 +1,21 @@
+
 $("#tabs > button").click(function() {
     images.push({
         "label": "Group "+(images.length + 1),
-        "images": []
+        "images": [],
+        "mode": 0
     });
     localStorage.setItem("images", JSON.stringify(images));
     renderTabs();
     renderImages();
+});
+$("#tabs select").change(function() {
+    var mode = $(this).val();
+
+    images[current_group].mode = mode;
+    localStorage.setItem("images", JSON.stringify(images));
+
+    setMode();
 });
 
 function renderTabs() {
@@ -19,8 +29,8 @@ function renderTabs() {
     }
     $("#tabs .items").html(html);
     var selected = $("#tabs .items div").get(current_group);
-    console.log(selected)
     $(selected).addClass("selected");
+
     $("#tabs .items div").click(function() {
         $("#tabs .items div").removeClass("selected");
         $(this).addClass("selected");
@@ -29,23 +39,42 @@ function renderTabs() {
         current_group = index;
         localStorage.setItem("current_group", JSON.stringify(current_group));
 
+        setMode();
+
         renderImages();
     })
 }
 function renderImages() {
     $("#container").html("");
+
+    var i = 0;
     for (var x in images[current_group].images) {
-        $("#container").append("<img src='"+images[current_group].images[x]+"'>");
+        var image = new Image(); 
+        image.onload = function() {
+            var height = 200;
+
+            var w = this.width;
+            var h = this.height;
+
+            var width = height * (w / h);
+
+            $("#container").append(`<div class='img fill' src='`+this.src+`' style='background-image: url("`+this.src+`"); width: `+width+`px; height: `+height+`px'></div>`);
+
+            i += 1;
+            if (i === images[current_group].images.length) {
+                $("#container .img").click(function() {
+                    if (confirm("Remove image?")) {
+                        var data = $(this).attr("src");
+                        var i = images[current_group].images.indexOf(data);
+                        images[current_group].images.splice(i, 1);
+                        localStorage.setItem("images", JSON.stringify(images));
+                        renderImages();
+                    }
+                })
+            }
+        };
+        image.src = images[current_group].images[x];
     }
-    $("#container img").click(function() {
-        if (confirm("Remove image?")) {
-            var data = $(this).attr("src");
-            var i = images[current_group].images.indexOf(data);
-            images[current_group].images.splice(i, 1);
-            localStorage.setItem("images", JSON.stringify(images));
-            renderImages();
-        }
-    })
 }
 function addImage(data) {
     compressImage(data, function(data) {
@@ -164,12 +193,23 @@ if (!images) {
     images = [
         {
             "label"  : "Group 1",
-            "images" : []
+            "images" : [],
+            "mode"   : 0
         }
     ];
 } else {
     images = JSON.parse(images);
 }
 
+var modes = ["Fixed Height", "Poster", "Portrait", "Rectangle"]
+function setMode() {
+    for (var x in modes) {
+        $("#container").removeClass("mode_"+x);
+    }
+    $("#container").addClass("mode_"+(images[current_group].mode||0));
+}
+$("#tabs select").val(images[current_group].mode||0);
+
 renderTabs();
+setMode();
 renderImages();
