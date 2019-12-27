@@ -36,9 +36,11 @@ body {
 	border-right: 1px solid #1a1a1a;
 }
 #tabs .items div.selected,
-#tabs .items div:hover {
+#tabs .items div:hover,
+#tabs button:hover {
 	background-color: aquamarine;
 	cursor: pointer;
+	color: #222;
 }
 
 #container {

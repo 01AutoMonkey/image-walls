@@ -18,6 +18,9 @@ function renderTabs() {
         }
     }
     $("#tabs .items").html(html);
+    var selected = $("#tabs .items div").get(current_group);
+    console.log(selected)
+    $(selected).addClass("selected");
     $("#tabs .items div").click(function() {
         $("#tabs .items div").removeClass("selected");
         $(this).addClass("selected");
