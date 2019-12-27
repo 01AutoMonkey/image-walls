@@ -89,8 +89,8 @@ function compressImage(data, callback) {
 
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     
-        var jpg = oc.toDataURL('image/jpeg', 0.75);
-        var png = oc.toDataURL('image/png');
+        var jpg = canvas.toDataURL('image/jpeg', 0.75);
+        var png = canvas.toDataURL('image/png');
         var image = jpg;
         if (png.length < jpg.length) {
             image = png;
