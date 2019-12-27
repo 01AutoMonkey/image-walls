@@ -1,3 +1,13 @@
+$("#tabs > button").click(function() {
+    images.push({
+        "label": "Group "+(images.length + 1),
+        "images": []
+    });
+    localStorage.setItem("images", JSON.stringify(images));
+    renderTabs();
+    renderImages();
+});
+
 function renderTabs() {
     var html = "";
     for (var x in images) {
@@ -35,18 +45,19 @@ function renderImages() {
     })
 }
 function addImage(data) {
-    if (images[current_group].images.indexOf(data) < 0) {
-        images[current_group].images.push(data);
-        localStorage.setItem("images", JSON.stringify(images));
-    }
-    
-    renderImages()
+    compressImage(data, function(data) {
+        if (images[current_group].images.indexOf(data) < 0) {
+            images[current_group].images.push(data);
+            localStorage.setItem("images", JSON.stringify(images));
+        }
+        
+        renderImages()
+    })
 }
 
 function toDataUrl(url, callback) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
-        console.log("onload...")
         var reader = new FileReader();
         reader.onloadend = function() {
             callback(reader.result);
@@ -55,12 +66,38 @@ function toDataUrl(url, callback) {
     };
     xhr.onerror = function(error) {
         this.onerror = null;
-        this.open('GET', "https://cors-anywhere.herokuapp.com/"+url);
+        this.open('GET', "https://cors-anywhere.herokuapp.com/"+url); // also: https://crossorigin.me/
         this.send();
     }
     xhr.open('GET', url);
     xhr.responseType = 'blob';
     xhr.send();
+}
+
+function compressImage(data, callback) {
+    var height = 400;
+    var canvas = document.getElementById("canvas");
+    var img = new Image();
+    img.onload = function () {
+        var width = height * (img.width / img.height);
+    
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+    
+        canvas.width = width;
+        canvas.height = height;
+
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    
+        var jpg = oc.toDataURL('image/jpeg', 0.75);
+        var png = oc.toDataURL('image/png');
+        var image = jpg;
+        if (png.length < jpg.length) {
+            image = png;
+        }
+        callback(image);
+    }
+    img.src = data;
 }
 
 var dropzone = document.getElementById('body');
@@ -123,11 +160,7 @@ var images = localStorage.getItem("images");
 if (!images) {
     images = [
         {
-            "label"  : "First",
-            "images" : []
-        },
-        {
-            "label"  : "Second",
+            "label"  : "Group 1",
             "images" : []
         }
     ];
