@@ -11,7 +11,15 @@ body {
 	height: 50px;
 	border-bottom: #222;
 }
-#tabs button {
+#tabs button,
+#tabs label.custom-file-upload {
+	height: 50px;
+	background-color: #222;
+	color: #fff;
+	border: 0px;
+	cursor: pointer;
+}
+#tabs button#new_gallery {
 	float: left;
 	width: 50px;
 	height: 50px;
@@ -20,6 +28,10 @@ body {
 	border: 0px;
 	cursor: pointer;
 	border-right: 1px solid #1a1a1a;
+}
+#tabs button#upload {
+	float: right;
+	border-left:1px solid #1a1a1a;
 }
 #tabs .items {
 	float: left;
@@ -59,6 +71,35 @@ body {
     -moz-appearance: none;
     -o-appearance: none;
     appearance: none;
+}
+#tabs input#file-upload[type="file"] {
+    display: none;
+}
+#tabs label.custom-file-upload {
+	float: right;
+	display: inline-block;
+	padding: 15px;
+	line-height: 20px;
+	border-left: 1px solid #1a1a1a;
+}
+
+
+#gallery_toolbar {
+	margin: 10px;
+}
+#gallery_toolbar > * {
+	display: inline-block;
+}
+#gallery_toolbar h1 {
+	color: #fff;
+	margin: 0;
+	padding: 0;
+}
+#gallery_toolbar button {
+	border: 0px;
+	background-color: #222;
+	color: #fff;
+	padding: 10px;
 }
 
 #container {

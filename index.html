@@ -20,7 +20,7 @@
 	<body id="body" class="markup-body">
 		<canvas id="canvas" class="hide" height="400"></canvas>
 		<div id="tabs">
-			<button>+</button>
+			<button id="new_gallery">+</button>
 			<div class="items">
 				<div id="group0" data-label="0">0</div>
 			</div>
@@ -30,6 +30,16 @@
 				<option value=2>Portrait</option>
 				<option value=3>Rectangle</option>
 			</select>
+
+			<!--<button id="upload">Import/Upload Gallery</button>-->
+			<label for="file-upload" class="custom-file-upload">
+				Import/Upload Gallery
+			</label>
+			<input id="file-upload" type="file" accept=".json"/>
+		</div>
+		<div id="gallery_toolbar">
+			<h1>Gallery #0</h1>
+			<button id="download">Download Gallery</button>
 		</div>
 		<div id="container"></div>
 		

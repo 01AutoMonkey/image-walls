@@ -1,80 +1,23 @@
-
-$("#tabs > button").click(function() {
-    images.push({
-        "label": "Group "+(images.length + 1),
-        "images": [],
-        "mode": 0
-    });
-    localStorage.setItem("images", JSON.stringify(images));
-    renderTabs();
-    renderImages();
-});
-$("#tabs select").change(function() {
-    var mode = $(this).val();
-
-    images[current_group].mode = mode;
-    localStorage.setItem("images", JSON.stringify(images));
-
-    setMode();
-});
-
-function renderTabs() {
-    var html = "";
-    for (var x in images) {
-        if (current_group === parseInt(x)) {
-            html += '<div id="group'+x+'" data-index="'+x+'" class="selected">'+images[x].label+'</div>';
-        } else {
-            html += '<div id="group'+x+'" data-index="'+x+'">'+images[x].label+'</div>';
-        }
+// Functions / Helpers
+function isJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
     }
-    $("#tabs .items").html(html);
-    var selected = $("#tabs .items div").get(current_group);
-    $(selected).addClass("selected");
-
-    $("#tabs .items div").click(function() {
-        $("#tabs .items div").removeClass("selected");
-        $(this).addClass("selected");
-
-        var index = $(this).attr("data-index");
-        current_group = index;
-        localStorage.setItem("current_group", JSON.stringify(current_group));
-
-        setMode();
-
-        renderImages();
-    })
+    return true;
 }
-function renderImages() {
-    $("#container").html("");
-
-    var i = 0;
-    for (var x in images[current_group].images) {
-        var image = new Image(); 
-        image.onload = function() {
-            var height = 200;
-
-            var w = this.width;
-            var h = this.height;
-
-            var width = height * (w / h);
-
-            $("#container").append(`<div class='img fill' src='`+this.src+`' style='background-image: url("`+this.src+`"); width: `+width+`px; height: `+height+`px'></div>`);
-
-            i += 1;
-            if (i === images[current_group].images.length) {
-                $("#container .img").click(function() {
-                    if (confirm("Remove image?")) {
-                        var data = $(this).attr("src");
-                        var i = images[current_group].images.indexOf(data);
-                        images[current_group].images.splice(i, 1);
-                        localStorage.setItem("images", JSON.stringify(images));
-                        renderImages();
-                    }
-                })
-            }
-        };
-        image.src = images[current_group].images[x];
-    }
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+  
+    element.style.display = 'none';
+    document.body.appendChild(element);
+  
+    element.click();
+  
+    document.body.removeChild(element);
 }
 function addImage(data) {
     compressImage(data, function(data) {
@@ -86,7 +29,6 @@ function addImage(data) {
         renderImages()
     })
 }
-
 function toDataUrl(url, callback) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
@@ -105,7 +47,6 @@ function toDataUrl(url, callback) {
     xhr.responseType = 'blob';
     xhr.send();
 }
-
 function compressImage(data, callback) {
     var height = 400;
     var canvas = document.getElementById("canvas");
@@ -131,7 +72,50 @@ function compressImage(data, callback) {
     }
     img.src = data;
 }
+function readSingleFile(e) {
+    var file = e.target.files[0];
+    if (!file) {
+        return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var contents = e.target.result;
+        if (isJson(contents)) {
+            images.push(JSON.parse(contents));
+            localStorage.setItem("images", JSON.stringify(images));
+            renderTabs();
+        } else {
+            console.log("IS NOT JSON")
+        }
+    };
+    reader.readAsText(file);
+}
 
+
+
+
+// EVENTS : One Time.
+$("#tabs > button#new_gallery").click(function() {
+    images.push({
+        "label": "Gallery "+(images.length + 1),
+        "images": [],
+        "mode": 0
+    });
+    localStorage.setItem("images", JSON.stringify(images));
+    renderTabs();
+    renderImages();
+});
+$("#tabs select").change(function() {
+    var mode = $(this).val();
+
+    images[current_group].mode = mode;
+    localStorage.setItem("images", JSON.stringify(images));
+
+    setMode();
+});
+$("#download").click(function() {
+    download(images[current_group].label+".json", JSON.stringify(images[current_group]));
+})
 var dropzone = document.getElementById('body');
 dropzone.addEventListener("dragenter", function(e) {
     e = e || event;
@@ -176,11 +160,77 @@ dropzone.addEventListener("drop", function(e) {
     }
 
     return false;
-}, false);
+}, false);  
+document.getElementById('file-upload').addEventListener('change', readSingleFile, false);
 
 
 
-// Main
+// RENDER : ... (and rendered DOM events)
+function renderTabs() {
+    var html = "";
+    for (var x in images) {
+        if (current_group === parseInt(x)) {
+            html += '<div id="group'+x+'" data-index="'+x+'" class="selected">'+images[x].label+'</div>';
+        } else {
+            html += '<div id="group'+x+'" data-index="'+x+'">'+images[x].label+'</div>';
+        }
+    }
+    $("#tabs .items").html(html);
+    var selected = $("#tabs .items div").get(current_group);
+    $(selected).addClass("selected");
+
+    $("#tabs .items div").click(function() {
+        $("#tabs .items div").removeClass("selected");
+        $(this).addClass("selected");
+
+        var index = $(this).attr("data-index");
+        current_group = index;
+        localStorage.setItem("current_group", JSON.stringify(current_group));
+
+        setMode();
+
+        renderImages();
+    })
+}
+function renderImages() {
+    $("#gallery_toolbar h1").text(images[current_group].label);
+    $("#container").html("");
+
+    var i = 0;
+    for (var x in images[current_group].images) {
+        var image = new Image(); 
+        image.onload = function() {
+            var height = 200;
+
+            var w = this.width;
+            var h = this.height;
+
+            var width = height * (w / h);
+
+            $("#container").append(`<div class='img fill' src='`+this.src+`' style='background-image: url("`+this.src+`"); width: `+width+`px; height: `+height+`px'></div>`);
+
+            i += 1;
+            if (i === images[current_group].images.length) {
+                $("#container .img").click(function() {
+                    if (confirm("Remove image?")) {
+                        var data = $(this).attr("src");
+                        var i = images[current_group].images.indexOf(data);
+                        images[current_group].images.splice(i, 1);
+                        localStorage.setItem("images", JSON.stringify(images));
+                        renderImages();
+                    }
+                })
+            }
+        };
+        image.src = images[current_group].images[x];
+    }
+}
+
+
+
+
+
+// Main / Start
 var current_group = localStorage.getItem("current_group");
 if (!current_group) {
     current_group = 0;
@@ -192,7 +242,7 @@ var images = localStorage.getItem("images");
 if (!images) {
     images = [
         {
-            "label"  : "Group 1",
+            "label"  : "Gallery 1",
             "images" : [],
             "mode"   : 0
         }
