@@ -220,6 +220,38 @@ function renderImages() {
                         renderImages();
                     }
                 })
+                $("document").ready(function() {
+                    setTimeout(function() {
+                        var img_groups = {}
+                        $("#container .img").each(function() {
+                            var top = $(this).position().top;
+                            img_groups["group_"+top] = img_groups["group_"+top]||[];
+                            img_groups["group_"+top].push(this);
+                        });
+
+                        for (var key in img_groups) {
+                            var c_width = $("#container").width();
+                            var width = 0;
+                            for (var img in img_groups[key]) {
+                                width += $(img_groups[key][img]).width();
+                            }
+                            var img_count = img_groups[key].length;
+                            var add_width = c_width - width;
+                            for (var img_num in img_groups[key]) {
+                                var first_w = $(img_groups[key][img_num]).width();
+                                $(img_groups[key][img_num]).width(first_w+(add_width/img_count));
+                            }
+
+                            //var count = img_groups[key].length;
+                            /*for (var img in img_groups[key]) {
+                                var w = parseFloat($(img_groups[key][img]).css("width"));
+                                var new_width = w + add_width/count;
+                                console.log(add_width, count)
+                                $(img_groups[key][img]).css("width", Math.floor(new_width)+"px");
+                            }*/
+                        }
+                    }, 1000)
+                })
             }
         };
         image.src = images[current_group].images[x];

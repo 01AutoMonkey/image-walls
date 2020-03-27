@@ -4,6 +4,7 @@ html, body {
 
 body {
 	background-color: #1a1a1a;
+	overflow-y: scroll;
 }
 
 #tabs {
@@ -103,16 +104,16 @@ body {
 }
 
 #container {
-	padding: 5px;
+	padding: 0px;
 	display: inline-block;
 }
 #container .img {
-	margin: 5px;
+	margin: 0px;
 	float: left;
-	border: 1px solid #000;
+	border: 0px solid #000;
 	border-style: solid !important;
 
-	border-radius: 5px;
+	border-radius: 0px;
 }
 #container.mode_0 .img {
 }
